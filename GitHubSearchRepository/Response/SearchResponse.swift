@@ -8,7 +8,8 @@
 
 import Foundation
 
-// 様々な種類の検索結果を汎用的に扱えるようにする
+// ジェネリクスで様々な種類の型（検索結果）を汎用的に扱えるようにする
+// [Item]型もDecodableプロトコルに準拠させる
 struct SearchResponse<Item: Decodable>: Decodable {
     let totalCount: Int
     let items: [Item]
