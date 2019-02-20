@@ -32,4 +32,30 @@ extension GitHubRequest {
     var baseURL: URL {
         return URL(string: "https://api.github.com")!
     }
+    
+    // GitHubRequestプロトコルに準拠する型を
+    // URLRequest型に変換するためのメソッド
+    func buildURLRequest() -> URLRequest {
+        // baseURLプロパティとpathプロパティの値を結合
+        let url = baseURL.appendingPathComponent(path)
+        // URL型の構成要素を表現するURLComponents型の値を生成
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        switch method {
+        case .get:
+            // GitHubRequestプロトコルのqueryItemsプロパティの値を
+            // URLComponents型のqueryItemsプロパティにセット
+            // エンコードを施したクエリ文字列を付与
+            components?.queryItems = queryItems
+        default:
+            // 今回は.get以外HTTPメソッドは考慮しない
+            fatalError("Unsupported method \(method)")
+        }
+        
+        // URLRequest型の値を生成して戻り値として返却する
+        var urlRequest = URLRequest(url: url)
+        // URLComponents型の値から取得可能なURL型の値を取得して、urlプロパティにセット
+        urlRequest.url = components?.url
+        urlRequest.httpMethod = method.rawValue
+        return urlRequest
+    }
 }
