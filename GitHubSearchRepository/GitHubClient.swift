@@ -19,11 +19,11 @@ class GitHubClient {
     }()
     
     // 呼び出し元が利用するメソッドのインターフェース
+    // 引数の型を汎用化させるためにジェネリクスを使う
     // メソッドに渡すリクエストの型に応じて、クロージャの引数の型も変わる
     func send<Request: GitHubRequest>(
         request: Request,
-        // 非同期的に発生するエラーに対処するため
-        // Result<T, Error>型を採用
+        // 非同期的に発生するエラーに対処するため、Result<T, Error>型を採用
         // 成功時には型引数Requestの連想型Responseの値を受け取ることができる
         completion: (Result<Request.Response, GitHubClientError>) -> Void) {
         let urlRequest = request.buildURLRequest()
